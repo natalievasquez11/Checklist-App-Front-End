@@ -1,0 +1,21 @@
+li {
+    text-align: left;
+}
+
+.btnSpan {
+    float: right;
+}
+
+.saveNewInput {
+    width: 80%;
+    float: left;
+}
+
+.saveNewBtn {
+    float: right;
+}
+
+.card {
+    width: 60%;
+    margin: auto;
+}

@@ -1,0 +1,40 @@
+<div class='row'>
+  <ul class='list-group col-md-6 offset-md-3'>
+    <li class='list-group-item' *ngFor='let item of listItemsArr'>
+
+      <ng-template [ngIf]='!item.edited' [ngIfElse]='editTask'>
+        <input type="checkbox" (click)='onCheck(item)' [checked]='item.completed'>&nbsp;
+          <span [style.text-decoration]="item.completed ? 'line-through' : 'none'">
+            {{ item.task }}
+          </span>
+        <span class='btnSpan'>
+          <button class='btn btn-warning' (click)='onShowEdit(item)'>Edit</button>&nbsp;
+          <button class='btn btn-danger' (click)='onDelete(item.id)'>Delete</button>
+        </span>
+      </ng-template>
+
+      <ng-template #editTask>
+        <input type='text' class='form-control' [(ngModel)]='item.task'><br>
+        <span class='btnSpan'>
+          <button class='btn btn-info' (click)='onUpdate(item)'>Save</button>&nbsp;
+        </span>
+      </ng-template>
+
+    </li>
+  </ul>
+</div>
+<br>
+<ng-template [ngIf]='!addTaskBtn' [ngIfElse]='addingTask'>
+  <button class="btn btn-primary" (click)='onAddBtn()'>Add Task</button>
+</ng-template>
+<ng-template #addingTask>
+  <div class='card'>
+    <div class='card-body'>
+      <input type='text' class='saveNewInput form-control' placeholder='Add Task Here' [(ngModel)]='newTask'>
+      <button class="saveNewBtn btn btn-info" (click)='onSaveNew()'>Save</button>
+    </div>
+  </div>
+</ng-template>
+
+<br><br>
+<button type='button' class='btn btn-secondary' (click)='onClear()'>Clear List</button>
