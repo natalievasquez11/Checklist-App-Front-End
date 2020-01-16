@@ -13,27 +13,27 @@ export class ChecklistServiceService {
   constructor(private http: HttpClient) { }
 
   getListItems(): Observable<Item[]> {
-    const url = this.apiUrl + '/get-checklist';
+    const url = this.apiUrl + '/getChecklist';
     return this.http.get<Item[]>(url);
   }
 
+  saveNew(newItem: Item): Observable<Item> {
+    const url = this.apiUrl + '/addTask';
+    return this.http.post<Item>(url, newItem);
+  }
+
   update(item: Item): Observable<number> {
-    const url = this.apiUrl + '/update/' + item.id;
+    const url = this.apiUrl + '/updateTask/' + item.id;
     return this.http.put<number>(url, item);
   }
 
   delete(itemId: number): Observable<any>{
-    const url = this.apiUrl + '/delete-task/' + itemId;
+    const url = this.apiUrl + '/deleteTask/' + itemId;
     return this.http.delete<any>(url);
   }
 
   clear(): Observable<number> {
-    const url = this.apiUrl + '/delete-all';
+    const url = this.apiUrl + '/deleteAll';
     return this.http.delete<number>(url);
-  }
-
-  saveNew(newItem: Item): Observable<Item> {
-    const url = this.apiUrl + '/add-task';
-    return this.http.post<Item>(url, newItem);
   }
 }

@@ -125,7 +125,7 @@ export class ListItemsComponent implements OnInit, OnDestroy {
       (res: Item) => {
         console.log('res' + res);
         this.getListItemsFromServer();
-       // this.newTask = '';
+        this.newTask = '';
       }, 
       (err) => {
         console.log(err);
