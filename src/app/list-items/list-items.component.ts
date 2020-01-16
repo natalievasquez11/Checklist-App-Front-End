@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ParamMap, ActivatedRoute } from '@angular/router';
 import { Subscription, Observable } from 'rxjs';
-import { Item } from '../Item';
+import { Task } from '../Task';
 import { ChecklistServiceService } from '../checklist-service.service';
 
 @Component({
@@ -10,48 +10,48 @@ import { ChecklistServiceService } from '../checklist-service.service';
   styleUrls: ['./list-items.component.css']
 })
 export class ListItemsComponent implements OnInit, OnDestroy {
-  listItemsArr: Item[];
-  itemsSub: Subscription;
-  deleteItemSub: Subscription;
-  updateItemSub: Subscription;
+  checklistTasksArr: Task[];
+  taskSub: Subscription;
+  deleteTaskSub: Subscription;
+  updateTaskSub: Subscription;
   deleteAllSub: Subscription;
-  addItemSub: Subscription;
-  addTaskBtn : boolean = false;
+  addTaskSub: Subscription;
+  isAddingTask : boolean = false;
   newTask: string;
   
   constructor(private checklistService: ChecklistServiceService) { 
   }
 
   ngOnInit() {
-    this.getListItemsFromServer();
+    this.getChecklistFromServer();
   }
 
   ngOnDestroy() {
-    if(this.itemsSub) {
-      this.itemsSub.unsubscribe();
+    if(this.taskSub) {
+      this.taskSub.unsubscribe();
     }
 
-    if(this.deleteItemSub) {
-      this.deleteItemSub.unsubscribe();
+    if(this.deleteTaskSub) {
+      this.deleteTaskSub.unsubscribe();
     }
 
-    if(this.updateItemSub) {
-      this.updateItemSub.unsubscribe();
+    if(this.updateTaskSub) {
+      this.updateTaskSub.unsubscribe();
     }
 
     if(this.deleteAllSub) {
       this.deleteAllSub.unsubscribe();
     }
 
-    if(this.addItemSub) {
-      this.addItemSub.unsubscribe();
+    if(this.addTaskSub) {
+      this.addTaskSub.unsubscribe();
     }
   }
 
-  getListItemsFromServer() {
-    this.itemsSub = this.checklistService.getListItems().subscribe(
-      (res: Item[]) => {
-        this.listItemsArr = res;
+  getChecklistFromServer() {
+    this.taskSub = this.checklistService.getChecklist().subscribe(
+      (res: Task[]) => {
+        this.checklistTasksArr = res;
       },
       err => {
         console.log(err);
@@ -59,77 +59,77 @@ export class ListItemsComponent implements OnInit, OnDestroy {
     )
   }
 
-  onCheck(item: Item) {
-    item.completed = !item.completed;
-    this.updateItemSub = this.checklistService.update(item).subscribe(
-      (res: number) => {
-        console.log(res);
-        this.getListItemsFromServer();
-      },
-      err => {
-        console.log(err);
-      }
-    ) 
-  }
+  onSaveNewTask() {
+    this.isAddingTask = false;
 
-  onDelete(itemId: number) {
-    this.deleteItemSub = this.checklistService.delete(itemId).subscribe(
-      (res: any) => {
-        console.log(res + ' item deleted.');
-        this.getListItemsFromServer();
-      },
-      err => {
-        console.log(err);
-      }
-    )
-  }
-
-  onShowEdit(item: Item) {
-    item.edited = true;
-  }
-
-  onUpdate(item:Item) {
-    item.edited = false;
-    this.updateItemSub = this.checklistService.update(item).subscribe(
-      (res: number) => {
-        console.log(res);
-        this.getListItemsFromServer();
-      },
-      err => {
-        console.log(err);
-      }
-    ) 
-  }
-
-  onClear() {
-    this.deleteAllSub = this.checklistService.clear().subscribe(
-      (res: number) => {
-        console.log(res);
-        this.getListItemsFromServer();
-      },
-      (err) => {
-        console.log(err);
-      }
-    )
-  }
-
-  onAddBtn() {
-    this.addTaskBtn = true;
-  }
-
-  onSaveNew() {
-    this.addTaskBtn = false;
-
-   const tempItem = new Item(this.newTask);
-    this.addItemSub = this.checklistService.saveNew(tempItem).subscribe(
-      (res: Item) => {
+   const tempTask = new Task(this.newTask);
+    this.addTaskSub = this.checklistService.saveNewTask(tempTask).subscribe(
+      (res: Task) => {
         console.log('res' + res);
-        this.getListItemsFromServer();
+        this.getChecklistFromServer();
         this.newTask = '';
       }, 
       (err) => {
         console.log(err);
       }
     )
+  }
+
+  onUpdateTask(task:Task) {
+    task.taskEdited = false;
+    this.updateTaskSub = this.checklistService.updateTask(task).subscribe(
+      (res: number) => {
+        console.log(res);
+        this.getChecklistFromServer();
+      },
+      err => {
+        console.log(err);
+      }
+    ) 
+  }
+
+  onCompleteTask(task: Task) {
+    task.taskCompleted = !task.taskCompleted;
+    this.updateTaskSub = this.checklistService.updateTask(task).subscribe(
+      (res: number) => {
+        console.log(res);
+        this.getChecklistFromServer();
+      },
+      err => {
+        console.log(err);
+      }
+    ) 
+  }
+
+  onDeleteTaskById(taskId: number) {
+    this.deleteTaskSub = this.checklistService.deleteTaskById(taskId).subscribe(
+      (res: any) => {
+        console.log(res + ' task deleted.');
+        this.getChecklistFromServer();
+      },
+      err => {
+        console.log(err);
+      }
+    )
+  }
+
+  onShowEditInput(task: Task) {
+    task.taskEdited = true;
+  }
+
+  onDeleteAllTasks() {
+    this.deleteAllSub = this.checklistService.deleteAllTasks().subscribe(
+      (res: number) => {
+        console.log(res);
+        this.getChecklistFromServer();
+      },
+      (err) => {
+        console.log(err);
+      }
+    )
+  }
+
+  onShowAddInput() {
+    this.isAddingTask = true;
   }
 }

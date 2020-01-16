@@ -5,13 +5,13 @@ import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 
 import { AppComponent } from './app.component';
-import { ListComponent } from './list/list.component';
+import { ChecklistComponent } from './checklist/checklist.component';
 import { ListItemsComponent } from './list-items/list-items.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    ListComponent,
+    ChecklistComponent,
     ListItemsComponent
   ],
   imports: [

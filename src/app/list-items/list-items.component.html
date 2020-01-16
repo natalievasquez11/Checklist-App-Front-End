@@ -1,40 +1,43 @@
 <div class='row'>
   <ul class='list-group col-md-6 offset-md-3'>
-    <li class='list-group-item' *ngFor='let item of listItemsArr'>
+    <li class='list-group-item' *ngFor='let task of checklistTasksArr'>
 
-      <ng-template [ngIf]='!item.edited' [ngIfElse]='editTask'>
-        <input type="checkbox" (click)='onCheck(item)' [checked]='item.completed'>&nbsp;
-          <span [style.text-decoration]="item.completed ? 'line-through' : 'none'">
-            {{ item.task }}
+      <ng-template [ngIf]='!task.taskEdited' [ngIfElse]='editTaskBtnClicked'>
+        <input type="checkbox" (click)='onCompleteTask(task)' [checked]='task.taskCompleted'>&nbsp;
+          <span [style.text-decoration]="task.taskCompleted ? 'line-through' : 'none'">
+            {{ task.taskName }}
           </span>
         <span class='btnSpan'>
-          <button class='btn btn-warning' (click)='onShowEdit(item)'>Edit</button>&nbsp;
-          <button class='btn btn-danger' (click)='onDelete(item.id)'>Delete</button>
+          <button class='btn btn-warning' (click)='onShowEditInput(task)'>Edit</button>&nbsp;
+          <button class='btn btn-danger' (click)='onDeleteTaskById(task.id)'>Delete</button>
         </span>
       </ng-template>
 
-      <ng-template #editTask>
-        <input type='text' class='form-control' [(ngModel)]='item.task'><br>
+      <ng-template #editTaskBtnClicked>
+        <input type='text' class='form-control' [(ngModel)]='task.taskName'><br>
         <span class='btnSpan'>
-          <button class='btn btn-info' (click)='onUpdate(item)'>Save</button>&nbsp;
+          <button class='btn btn-info' (click)='onUpdateTask(task)'>Save</button>&nbsp;
         </span>
       </ng-template>
 
     </li>
   </ul>
 </div>
+
 <br>
-<ng-template [ngIf]='!addTaskBtn' [ngIfElse]='addingTask'>
-  <button class="btn btn-primary" (click)='onAddBtn()'>Add Task</button>
+
+<ng-template [ngIf]='!isAddingTask' [ngIfElse]='showAddTaskInput'>
+  <button class="btn btn-primary" (click)='onShowAddInput()'>Add Task</button>
 </ng-template>
-<ng-template #addingTask>
+
+<ng-template #showAddTaskInput>
   <div class='card'>
     <div class='card-body'>
       <input type='text' class='saveNewInput form-control' placeholder='Add Task Here' [(ngModel)]='newTask'>
-      <button class="saveNewBtn btn btn-info" (click)='onSaveNew()'>Save</button>
+      <button class="saveNewBtn btn btn-info" (click)='onSaveNewTask()'>Save</button>
     </div>
   </div>
 </ng-template>
 
 <br><br>
-<button type='button' class='btn btn-secondary' (click)='onClear()'>Clear List</button>
+<button type='button' class='btn btn-secondary' (click)='onDeleteAllTasks()'>Clear List</button>
